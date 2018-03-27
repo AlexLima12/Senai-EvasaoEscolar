@@ -1,0 +1,15 @@
+dotnet ef migrations add BancoEvasao
+
+dotnet ef database update
+
+
+
+file:///C:/Users/40344056864/backend/EvasaoEscolar/EvasaoEscolar/html/upload.html
+
+
+string 
+
+ //  "DefaultConnection" : "Data Source=.\\SqlExpress; initial catalog=BancoEvasao; user id=sa; password=senai@123 "
+
+ banco online    "DefaultConnection" : "Data Source=sql5039.site4now.net; initial catalog=DB_A37B6E_alexlima1; user id=DB_A37B6E_alexlima1_admin; password=Codexp132"
+

@@ -1,0 +1,5 @@
+C:\Users\ALEX\Desktop\Projetos\senai-evasao-backend-master\evasaoescolar
+--output-path=obj\Debug\netcoreapp2.0\
+--application-name=EvasaoEscolar
+--content-root=C:\Users\ALEX\Desktop\Projetos\senai-evasao-backend-master\evasaoescolar
+--file=C:\Users\ALEX\Desktop\Projetos\senai-evasao-backend-master\evasaoescolar\View\Upload.cshtml
