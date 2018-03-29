@@ -26,8 +26,8 @@ namespace EvasaoEscolar.CONTROLLERS
             _alertasRepository = alertasRepository;
         }
 
- [HttpGet]
-        [Route("todosOrdenado")]
+        [HttpGet]
+        [Route("todos")]
         public IActionResult Buscar()
         {
             try
@@ -35,7 +35,7 @@ namespace EvasaoEscolar.CONTROLLERS
                 var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
                 ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
 
-               return Ok(alunos);
+                return Ok(alunos);
             }
             catch (Exception ex)
             {
@@ -53,18 +53,8 @@ namespace EvasaoEscolar.CONTROLLERS
             {
                 var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
                 ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
-
-                //OrderBy( x=> x.clAlertas.Last().DataAlerta)
-
-
-                // var datasOrdenadas = alunos;
-
-                // foreach (var item in datasOrdenadas)
-                // {
-                //     alunos.clAlertas.OrderBy().DataAlerta;
-                // }
-
-                var alertasOrdenadas = alunos.OrderBy(x=> x.clAlertas.Last().DataAlerta);
+                
+                var alertasOrdenadas = alunos.OrderBy(x => x.clAlertas.Last().DataAlerta);
 
                 return Ok(alertasOrdenadas);
             }
@@ -83,21 +73,21 @@ namespace EvasaoEscolar.CONTROLLERS
         {
             try
             {
-              //var aluno = _alunoRepository.BuscarPorId(Id);
+                //var aluno = _alunoRepository.BuscarPorId(Id);
 
-              var alunos = _alunoRepository.BuscarPorId(Id, new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
+                var alunos = _alunoRepository.BuscarPorId(Id, new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
                 ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
 
 
-                
 
 
-            //   var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
-            //     ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"}).Where(x => x.Id == Id);
-                
-                
+
+                //   var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
+                //     ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"}).Where(x => x.Id == Id);
+
+
                 //com relacionamento
-              
+
 
                 //   var relacionamentos = _alunoRepository.Listar(new string[]{"Permissao"}).Where( c=> c.UsuarioId == Id);
 

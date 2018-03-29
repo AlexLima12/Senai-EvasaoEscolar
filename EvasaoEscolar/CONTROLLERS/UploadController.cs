@@ -29,13 +29,17 @@ namespace EvasaoEscolar.CONTROLLERS
 
         private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
 
-        public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository)
+        private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
+        private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
+
+        public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
+        IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
         {
             _hostingEnvironment = hostingEnvironment;
-
             _alunoRepository = alunoRepository;
-
             _planilhaDadosRepository = planilhaDadosRepository;
+            _disciplinaturmaRepository = disciplinaturmaRepository;
+            _uploadplanilhaRepository = uploadplanilhaRepository;
         }
 
 
@@ -43,14 +47,14 @@ namespace EvasaoEscolar.CONTROLLERS
 
         [HttpPost("UploadFiles")]
 
-        public ActionResult Post(List <IFormFile> files)
+        public ActionResult Post(List<IFormFile> files, int turma, int disciplina, DateTime dataCorrespondente)
         {
             //  IBaseRepository<AlunoDomain> alunoRepository;
 
             ProcessarPlanilha pp = new ProcessarPlanilha();
 
 
-            string retorno = pp.ProcessandoPlanilha(files[0], _alunoRepository, _planilhaDadosRepository);
+            string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente);
 
             return Json(new { success = true, responseText = retorno.ToString() });
 

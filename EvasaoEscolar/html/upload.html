@@ -29,19 +29,24 @@
             var fileupload = $("#files").get(0);
             var files = fileupload.files;
             var data = new FormData();
+            
             for (var i = 0; i < files.length; i++) {
                 data.append('files', files[i]);
             }
+           
 
             // You can update the jquery selector to use a css class if you want
             $("input[type='text'").each(function (x, y) {
                 data.append($(y).attr("name"), $(y).val());
             });
 
+            console.dir(data);
+
             $.ajax({
                 type: "post",
-                url: "http://alexlima1-001-site1.htempurl.com/api/upload/uploadFiles",
+               // url: "http://alexlima1-001-site1.htempurl.com/api/upload/uploadFiles",
                 //
+                url: "http://localhost:5000/api/upload/uploadFiles",
                 contentType: false,
                 processData: false,
                 data: data,

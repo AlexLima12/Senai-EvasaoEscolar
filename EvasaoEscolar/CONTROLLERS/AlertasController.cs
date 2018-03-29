@@ -38,6 +38,56 @@ namespace EvasaoEscolar.CONTROLLERS
                 return BadRequest("Erro ao buscar dados. " + ex.Message);
             }
         }
-        
+
+
+        [HttpPut]
+        [Route("atualizar")]
+        public IActionResult Atualizar([FromBody] AlertasDomain alertas)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+            
+            try
+            {
+                 _alertaRepository.Atualizar(alertas);
+                 return Ok($"id:{alertas.Id}");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao atualizar os dados... " + ex.Message);
+            }
+        }
+
+
+        [HttpPut("atualizarPorId/{id}/{status}")]
+        [Route("atualizarPorId")]
+        public IActionResult AtualizarId(int id, bool status)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var aluno = _alunoRepository.BuscarPorId(id, new string[] { "clAlertas" });
+
+                foreach (var alerta in aluno.clAlertas)
+                {
+                    alerta.AlertaAntigo = status;
+                    _alertaRepository.Atualizar(alerta);
+                }
+                return Ok($"Alerta atualizado");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao atualizar os dados... " + ex.Message);
+            }
+        }
+
+
+
+
+
     }
 }

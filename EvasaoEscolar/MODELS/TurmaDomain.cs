@@ -14,6 +14,7 @@ namespace EvasaoEscolar.MODELS
         [Required]
         [StringLength(1)]
         public int Periodo { get; set; }
+        //periodo 0 = Manha, 1 = Tarde, 2 = Noite
         
 
         [ForeignKey("EscolaId")]

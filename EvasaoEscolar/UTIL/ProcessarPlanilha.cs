@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -17,25 +18,27 @@ namespace EvasaoEscolar.UTIL
     {
         private IBaseRepository<AlunoDomain> _alunoRepository;
         private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
-        
-        
+        private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
+        private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
+
+
         public ProcessarPlanilha()
         {
 
         }
 
-        //descomnetar 
-        // public ProcessarPlanilha(IFormFile file, IBaseRepository<AlunoDomain> alunoRepository)
-        // {
-        // manter comentario  //   _alunoRepository = alunoRepository;
-        // }
-
-
-
-        public string ProcessandoPlanilha(IFormFile arquivo, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository)
+        public ProcessarPlanilha(IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
+        IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
         {
             _alunoRepository = alunoRepository;
             _planilhaDadosRepository = planilhaDadosRepository;
+            _disciplinaturmaRepository = disciplinaturmaRepository;
+            _uploadplanilhaRepository = uploadplanilhaRepository;
+        }
+
+
+        public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente)
+        {
 
             var data = new MemoryStream();
 
@@ -62,14 +65,18 @@ namespace EvasaoEscolar.UTIL
             DataSet result = reader.AsDataSet();
             reader.Close();
 
-
+            //Valores inseridos para teste
+            turmaDoFront = 2;
+            disciplinaDoFront = 2;
+            dataCorrespondente = DateTime.Today;
 
             for (int i = 2; i < result.Tables[0].Rows.Count; i++)
             {
-
+                //instanciando objetos
                 AlunoDomain aluno = new AlunoDomain();
                 PlanilhaDadosDomain planilhaDados = new PlanilhaDadosDomain();
-                UploadPlanilhaDomain uploadPlanilha = new UploadPlanilhaDomain();
+                DisciplinaTurmaDomain disciplinaTurmaObj = new DisciplinaTurmaDomain();
+                UploadPlanilhaDomain uploadPlanilhaObj = new UploadPlanilhaDomain();
 
 
                 aluno.NomeAluno = result.Tables[0].Rows[i][1].ToString();
@@ -77,12 +84,26 @@ namespace EvasaoEscolar.UTIL
                 var status = result.Tables[0].Rows[i][6].ToString();
 
                 planilhaDados.DadosProcessados = true;
-              
+
                 planilhaDados.Aula1Planilha = result.Tables[0].Rows[i][7].ToString();
                 planilhaDados.Aula2Planilha = result.Tables[0].Rows[i][8].ToString();
                 planilhaDados.Aula3Planilha = result.Tables[0].Rows[i][9].ToString();
                 planilhaDados.Aula4Planilha = result.Tables[0].Rows[i][10].ToString();
                 planilhaDados.Aula5Planilha = result.Tables[0].Rows[i][11].ToString();
+
+
+
+                //teste para popular tabela DisciplinaTurma
+                disciplinaTurmaObj.DisciplinaId = disciplinaDoFront;
+                disciplinaTurmaObj.TurmaId = turmaDoFront;
+
+                //teste para popular tabela UploadPlanilha                   
+                //_disciplinaturmaRepository.Listar().Where(c=> c.TurmaId == turmaDoFront && c.DisciplinaId == disciplinaDoFront);  
+
+                int DisciplinaTurmaIdOBTIDA = 1;
+                uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
+                uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
+                uploadPlanilhaObj.DisciplinaTurmaId = DisciplinaTurmaIdOBTIDA;
 
 
 
@@ -94,34 +115,14 @@ namespace EvasaoEscolar.UTIL
                 {
                     aluno.StatusAlunoEvadiu = false;
                 }
-
-
-                if (aluno == null)
-                {
-
-                }
-                else
-                {
-                    _alunoRepository.Inserir(aluno);
-
-                    //var ultimoAluno = _alunoRepository.Listar().FirstOrDefault(c => c.Matricula == aluno.Matricula);
-
-                    planilhaDados.UploadPlanilhaId = 1;
-                  // Usar este quando o front estiver me enviando os dados do UPLOAD  planilhaDados.UploadPlanilhaId = uploadPlanilha.Id;
-                    planilhaDados.AlunoId = aluno.Id;
-                    _planilhaDadosRepository.Inserir(planilhaDados);
-
-
-                }
-
-
+                _alunoRepository.Inserir(aluno);
+                _planilhaDadosRepository.Inserir(planilhaDados);
+                _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
+                _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
             }
 
 
-            //   aluno = contexto.Aluno.FirstOrDefault(x => x.matricula);
-
-
-            string retorno = arquivo.FileName;
+            string retorno = "Upload Concluido";
 
             return retorno;
 
