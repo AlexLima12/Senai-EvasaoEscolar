@@ -17,7 +17,6 @@ using NPOI.XSSF.UserModel;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.AspNetCore.Cors;
 
-
 namespace EvasaoEscolar.CONTROLLERS
 {
     [Route("api/upload")]
@@ -26,35 +25,32 @@ namespace EvasaoEscolar.CONTROLLERS
     {
         private IHostingEnvironment _hostingEnvironment;
         public IBaseRepository<AlunoDomain> _alunoRepository;
-
         private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
-
         private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
         private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
 
+        //Valores recortados do contrutor abaixo:
+        // , IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
+      //  IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository
         public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
         IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
         {
             _hostingEnvironment = hostingEnvironment;
-            _alunoRepository = alunoRepository;
-            _planilhaDadosRepository = planilhaDadosRepository;
-            _disciplinaturmaRepository = disciplinaturmaRepository;
-            _uploadplanilhaRepository = uploadplanilhaRepository;
+           _alunoRepository = alunoRepository;
+           _planilhaDadosRepository = planilhaDadosRepository;
+           _disciplinaturmaRepository = disciplinaturmaRepository;
+           _uploadplanilhaRepository = uploadplanilhaRepository;
         }
-
-
-
 
         [HttpPost("UploadFiles")]
 
         public ActionResult Post(List<IFormFile> files, int turma, int disciplina, DateTime dataCorrespondente)
         {
-            //  IBaseRepository<AlunoDomain> alunoRepository;
-
+           
             ProcessarPlanilha pp = new ProcessarPlanilha();
 
-
-            string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente);
+        string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente, _alunoRepository, _planilhaDadosRepository,
+        _disciplinaturmaRepository, _uploadplanilhaRepository);
 
             return Json(new { success = true, responseText = retorno.ToString() });
 

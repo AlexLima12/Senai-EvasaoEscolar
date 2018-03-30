@@ -9,37 +9,41 @@ using Excel;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 
-
-
-
 namespace EvasaoEscolar.UTIL
 {
     public class ProcessarPlanilha
     {
-        private IBaseRepository<AlunoDomain> _alunoRepository;
-        private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
-        private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
-        private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
+        // private IBaseRepository<AlunoDomain> _alunoRepository;
+        // private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
+        // private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
+        // private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
 
 
         public ProcessarPlanilha()
         {
-
+        
         }
 
-        public ProcessarPlanilha(IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
-        IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
+        // public ProcessarPlanilha(IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
+        // IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
+        // {
+        //     _alunoRepository = alunoRepository;
+        //     _planilhaDadosRepository = planilhaDadosRepository;
+        //     _disciplinaturmaRepository = disciplinaturmaRepository;
+        //     _uploadplanilhaRepository = uploadplanilhaRepository;
+        // }
+
+
+        public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente, IBaseRepository<AlunoDomain> _alunoRepository, IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository,
+        IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository)
         {
-            _alunoRepository = alunoRepository;
-            _planilhaDadosRepository = planilhaDadosRepository;
-            _disciplinaturmaRepository = disciplinaturmaRepository;
-            _uploadplanilhaRepository = uploadplanilhaRepository;
-        }
+            // _alunoRepository = alunoRepository;
+            // _planilhaDadosRepository = planilhaDadosRepository;
+            // _disciplinaturmaRepository = disciplinaturmaRepository;
+            // _uploadplanilhaRepository = uploadplanilhaRepository;
 
 
-        public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente)
-        {
-
+            //
             var data = new MemoryStream();
 
             arquivo.CopyTo(data);
@@ -70,65 +74,73 @@ namespace EvasaoEscolar.UTIL
             disciplinaDoFront = 2;
             dataCorrespondente = DateTime.Today;
 
+              DisciplinaTurmaDomain disciplinaTurmaObj = new DisciplinaTurmaDomain();
+              UploadPlanilhaDomain uploadPlanilhaObj = new UploadPlanilhaDomain();
+
+               //teste para popular tabela DisciplinaTurma
+                disciplinaTurmaObj.DisciplinaId = disciplinaDoFront;
+                disciplinaTurmaObj.TurmaId = turmaDoFront;
+                _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
+
+
+                //teste para popular tabela UploadPlanilha 
+              
+                uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
+                uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
+                uploadPlanilhaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
+                 //_disciplinaturmaRepository.Listar().Where(c=> c.TurmaId == turmaDoFront && c.DisciplinaId == disciplinaDoFront); 
+
+                 _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
+
+            //For para percorrer as linhas da planilha
             for (int i = 2; i < result.Tables[0].Rows.Count; i++)
             {
                 //instanciando objetos
-                AlunoDomain aluno = new AlunoDomain();
-                PlanilhaDadosDomain planilhaDados = new PlanilhaDadosDomain();
-                DisciplinaTurmaDomain disciplinaTurmaObj = new DisciplinaTurmaDomain();
-                UploadPlanilhaDomain uploadPlanilhaObj = new UploadPlanilhaDomain();
+                AlunoDomain alunoObj = new AlunoDomain();
+                PlanilhaDadosDomain planilhaDadosObj = new PlanilhaDadosDomain();             
 
-
-                aluno.NomeAluno = result.Tables[0].Rows[i][1].ToString();
-                aluno.Matricula = result.Tables[0].Rows[i][5].ToString();
+                alunoObj.NomeAluno = result.Tables[0].Rows[i][1].ToString();
+                alunoObj.Matricula = result.Tables[0].Rows[i][5].ToString();
                 var status = result.Tables[0].Rows[i][6].ToString();
 
-                planilhaDados.DadosProcessados = true;
+                planilhaDadosObj.DadosProcessados = true;
 
-                planilhaDados.Aula1Planilha = result.Tables[0].Rows[i][7].ToString();
-                planilhaDados.Aula2Planilha = result.Tables[0].Rows[i][8].ToString();
-                planilhaDados.Aula3Planilha = result.Tables[0].Rows[i][9].ToString();
-                planilhaDados.Aula4Planilha = result.Tables[0].Rows[i][10].ToString();
-                planilhaDados.Aula5Planilha = result.Tables[0].Rows[i][11].ToString();
-
-
-
-                //teste para popular tabela DisciplinaTurma
-                disciplinaTurmaObj.DisciplinaId = disciplinaDoFront;
-                disciplinaTurmaObj.TurmaId = turmaDoFront;
-
-                //teste para popular tabela UploadPlanilha                   
-                //_disciplinaturmaRepository.Listar().Where(c=> c.TurmaId == turmaDoFront && c.DisciplinaId == disciplinaDoFront);  
-
-                int DisciplinaTurmaIdOBTIDA = 1;
-                uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
-                uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
-                uploadPlanilhaObj.DisciplinaTurmaId = DisciplinaTurmaIdOBTIDA;
-
-
+                planilhaDadosObj.Aula1Planilha = result.Tables[0].Rows[i][7].ToString();
+                planilhaDadosObj.Aula2Planilha = result.Tables[0].Rows[i][8].ToString();
+                planilhaDadosObj.Aula3Planilha = result.Tables[0].Rows[i][9].ToString();
+                planilhaDadosObj.Aula4Planilha = result.Tables[0].Rows[i][10].ToString();
+                planilhaDadosObj.Aula5Planilha = result.Tables[0].Rows[i][11].ToString();           
+                                               
 
                 if (status == "ativo")
                 {
-                    aluno.StatusAlunoEvadiu = true;
+                    alunoObj.StatusAlunoEvadiu = true;
                 }
                 else
                 {
-                    aluno.StatusAlunoEvadiu = false;
+                    alunoObj.StatusAlunoEvadiu = false;
                 }
-                _alunoRepository.Inserir(aluno);
-                _planilhaDadosRepository.Inserir(planilhaDados);
-                _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
-                _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
+
+                //inserir aluno vindo da planilha            
+                _alunoRepository.Inserir(alunoObj);                        
+                
+                //Pega o Id do aluno para inserir no objeto planilhaDados
+                 planilhaDadosObj.AlunoId = alunoObj.Id;
+                 planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
+                 planilhaDadosObj.UploadPlanilhaId = uploadPlanilhaObj.Id;
+                 
+              //Insere os dados na tabela PlanilhaDados
+                _planilhaDadosRepository.Inserir(planilhaDadosObj);
+                
             }
 
+            
 
             string retorno = "Upload Concluido";
 
             return retorno;
 
         }
-
-
 
     }
 }
