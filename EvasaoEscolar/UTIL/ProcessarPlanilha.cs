@@ -36,7 +36,7 @@ namespace EvasaoEscolar.UTIL
         public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente,
          IBaseRepository<AlunoDomain> _alunoRepository, IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository,
           IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository,
-          IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository)
+          IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> _frequenciaRepository)
         {
 
             var data = new MemoryStream();
@@ -66,9 +66,9 @@ namespace EvasaoEscolar.UTIL
 
 
             //Valores inseridos para teste, pois esses valores devem ser recebidos do front
-            turmaDoFront = 3;
-            disciplinaDoFront = 1;
-            dataCorrespondente = DateTime.Today;
+            // turmaDoFront = 3;
+            // disciplinaDoFront = 1;
+            // dataCorrespondente = DateTime.Today;
 
             DisciplinaTurmaDomain disciplinaTurmaObj = new DisciplinaTurmaDomain();
             UploadPlanilhaDomain uploadPlanilhaObj = new UploadPlanilhaDomain();
@@ -119,6 +119,7 @@ namespace EvasaoEscolar.UTIL
                 AlunoDomain alunoObj = new AlunoDomain();
                 PlanilhaDadosDomain planilhaDadosObj = new PlanilhaDadosDomain();
                 AlunoDisciplinaTurmaDomain alunoDisciplinaTurmaObj = new AlunoDisciplinaTurmaDomain();
+                FrequenciaDomain frequenciaObj = new FrequenciaDomain();
 
                 alunoObj.NomeAluno = result.Tables[0].Rows[i][1].ToString();
                 alunoObj.Matricula = result.Tables[0].Rows[i][5].ToString();
@@ -141,20 +142,17 @@ namespace EvasaoEscolar.UTIL
                     alunoObj.StatusAlunoEvadiu = true;
                 }
 
-                                            
+                     //Consulta para VERIFICAR SE JÁ EXISTE ALUNO CADASTRADO POR MATRÍCULA                        
                      var alunosCadastrados = _alunoRepository.Listar().Where(x => x.Matricula == alunoObj.Matricula);
-                     if (alunosCadastrados.Count() == 0){
-                    
-
-                   //for para VERIFICAR SE JÁ EXISTE ALUNO CADASTRADO POR MATRÍCULA
-                    
+                     if (alunosCadastrados.Count() == 0){                    
+                                      
                         //IF para pular vazios
                         if (alunoObj.Matricula != "")
                         {
                             //inserir aluno vindo da planilha 
                                    
                             _alunoRepository.Inserir(alunoObj);
-
+                            
                             //Pega o Id e nome do aluno para inserir no objeto planilhaDados
                             planilhaDadosObj.AlunoId = alunoObj.Id;
                             planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
@@ -163,15 +161,14 @@ namespace EvasaoEscolar.UTIL
                             //Insere os dados na tabela PlanilhaDados
                             _planilhaDadosRepository.Inserir(planilhaDadosObj);
 
-                            // só inserir o objeto a seguir quando aluno não tiver cadastrado ainda
+                            // só inserir o objeto a seguir quando aluno não tiver cadastrado ainda                            
                             // inserir alunoDisciplinaTurma no banco
-
-
                             if (condicao == true)
                             {
                                 alunoDisciplinaTurmaObj.AlunoId = alunoObj.Id;
                                 alunoDisciplinaTurmaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
                                 _alunoDisciplinaTurmaRepository.Inserir(alunoDisciplinaTurmaObj);
+                         
                             }
                             else
                             {
@@ -182,15 +179,34 @@ namespace EvasaoEscolar.UTIL
                                     alunoDisciplinaTurmaObj.AlunoId = alunoObj.Id;
                                     alunoDisciplinaTurmaObj.DisciplinaTurmaId = idObtida;
                                     _alunoDisciplinaTurmaRepository.Inserir(alunoDisciplinaTurmaObj);
-
-                                    
+                                   
 
                                 }
 
-
-
                             }
 
+                            //Inserir na tabela frequência quando o aluno não tiver cadastrado
+                            int faltas = 0;
+                            var faltasPorAluno = _planilhaDadosRepository.Listar().Where(x => x.AlunoId == alunoObj.Id);                          
+
+                            foreach (var item in faltasPorAluno)
+                            {
+                                string[] faltasArray = new string[5] {item.Aula1Planilha, item.Aula2Planilha, item.Aula3Planilha, item.Aula4Planilha, item.Aula5Planilha};
+                               
+                                faltas = faltasArray.Where(e => e.ToLower() == "f").Count();
+                                
+                            }                           
+
+                            frequenciaObj.AlunoDisciplinaTurmaId = alunoDisciplinaTurmaObj.Id;
+                            frequenciaObj.Falta = faltas;
+                            
+
+                            frequenciaObj.Dias = 0;
+                            frequenciaObj.Atraso = 0;
+                            frequenciaObj.Presenca = 5 - faltas;
+                            frequenciaObj.NumeroDeAulas = faltas + frequenciaObj.Presenca;
+
+                            _frequenciaRepository.Inserir(frequenciaObj);
 
                         }
 
@@ -200,6 +216,8 @@ namespace EvasaoEscolar.UTIL
                     
                 
                      }
+                
+                //Popular tabela frequência
 
 
             }

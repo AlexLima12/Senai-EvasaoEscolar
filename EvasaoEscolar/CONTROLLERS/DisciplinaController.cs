@@ -15,18 +15,14 @@ using EvasaoEscolar.CONTEXTO;
 
 namespace EvasaoEscolar.CONTROLLERS
 {
+    
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
-
-    public class TurmaController : Controller
-
+    
+        public class DisciplinaController : Controller
     {
-        private IBaseRepository<TurmaDomain> _turmaRepository;
+        private IBaseRepository<DisciplinasDomain> _disciplinaRepository;
         readonly EvasaEscolarContext contexto;
-        public TurmaController(IBaseRepository<TurmaDomain> turmaRepository)
-        {
-            _turmaRepository = turmaRepository;
-        }
 
         [HttpGet]
         [Route("todos")]
@@ -34,9 +30,8 @@ namespace EvasaoEscolar.CONTROLLERS
         {
             try
             {
-                var turmas = _turmaRepository.Listar();
-
-                return Ok(turmas);
+                var disciplinas = _disciplinaRepository.Listar();
+                return Ok(disciplinas);
             }
             catch (Exception ex)
             {
@@ -44,7 +39,7 @@ namespace EvasaoEscolar.CONTROLLERS
             }
         }
 
-        public IActionResult Cadastrar([FromBody] TurmaDomain turmas)
+        public IActionResult Cadastrar([FromBody] DisciplinasDomain disciplinas)
         {
 
             if (!ModelState.IsValid)
@@ -52,8 +47,8 @@ namespace EvasaoEscolar.CONTROLLERS
 
             try
             {
-                _turmaRepository.Inserir(turmas);
-                return Ok($"id:{turmas.Id}");
+                _disciplinaRepository.Inserir(disciplinas);
+                return Ok($"id:{disciplinas.Id} cadastrada com sucesso");
 
             }
             catch (Exception ex)
@@ -63,19 +58,19 @@ namespace EvasaoEscolar.CONTROLLERS
         }
 
 
-        [Route("deletarid/{Id}")]
+         [Route("deletarid/{Id}")]
         [HttpDelete]
         public IActionResult Delete(int Id)
         {
-            var turmas = contexto.DbTurmas.Where(i => i.Id == Id).FirstOrDefault();
-            if (turmas == null)
+            var disciplinas = contexto.DbDisciplinas.Where(i => i.Id == Id).FirstOrDefault();
+            if (disciplinas == null)
                 return NotFound();
 
-            contexto.DbTurmas.Remove(turmas);
+            contexto.DbDisciplinas.Remove(disciplinas);
             int x = contexto.SaveChanges();
             if (x > 0)
             {
-                return Ok($"id:{turmas.Id}");
+                return Ok($"id:{disciplinas.Id}");
             }
             else
             {
@@ -83,6 +78,7 @@ namespace EvasaoEscolar.CONTROLLERS
             }
 
         }
+
 
 
     }

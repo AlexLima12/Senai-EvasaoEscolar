@@ -49,6 +49,7 @@ namespace EvasaoEscolar.CONTROLLERS
         /// </summary>
         /// <returns></returns>
         //listar Todos
+        
         [HttpGet]
         [Route("todos")]
         public IActionResult Buscar()

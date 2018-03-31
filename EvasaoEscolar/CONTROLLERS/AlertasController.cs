@@ -6,11 +6,17 @@ using EvasaoEscolar.REPOSITORIES;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using EvasaoEscolar.Enum;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
+
+
 
 
 namespace EvasaoEscolar.CONTROLLERS
 {
     [Route("api/[controller]")]
+    [EnableCors("AllowAnyOrigin")]
     public class AlertasController : Controller
     {
         private IBaseRepository<AlunoDomain> _alunoRepository;

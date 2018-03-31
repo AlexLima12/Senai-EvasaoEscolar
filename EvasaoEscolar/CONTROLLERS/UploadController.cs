@@ -30,33 +30,34 @@ namespace EvasaoEscolar.CONTROLLERS
         private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
         private IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository;
 
+        private IBaseRepository<FrequenciaDomain> _frequenciaRepository;
+
         //Valores recortados do contrutor abaixo:
         // , IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
-      //  IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository
+        //  IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository
         public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
         IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository,
-        IBaseRepository<AlunoDisciplinaTurmaDomain> alunoDisciplinaTurmaRepository)
+        IBaseRepository<AlunoDisciplinaTurmaDomain> alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> frequenciaRepository)
         {
             _hostingEnvironment = hostingEnvironment;
-           _alunoRepository = alunoRepository;
-           _planilhaDadosRepository = planilhaDadosRepository;
-           _disciplinaturmaRepository = disciplinaturmaRepository;
-           _uploadplanilhaRepository = uploadplanilhaRepository;
-          _alunoDisciplinaTurmaRepository = alunoDisciplinaTurmaRepository;
+            _alunoRepository = alunoRepository;
+            _planilhaDadosRepository = planilhaDadosRepository;
+            _disciplinaturmaRepository = disciplinaturmaRepository;
+            _uploadplanilhaRepository = uploadplanilhaRepository;
+            _alunoDisciplinaTurmaRepository = alunoDisciplinaTurmaRepository;
+            _frequenciaRepository = frequenciaRepository;
         }
 
         [HttpPost("UploadFiles")]
 
         public ActionResult Post(List<IFormFile> files, int turma, int disciplina, DateTime dataCorrespondente)
         {
-           
             ProcessarPlanilha pp = new ProcessarPlanilha();
 
-        string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente, _alunoRepository, _planilhaDadosRepository,
-        _disciplinaturmaRepository, _uploadplanilhaRepository, _alunoDisciplinaTurmaRepository);
+            string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente, _alunoRepository, _planilhaDadosRepository,
+            _disciplinaturmaRepository, _uploadplanilhaRepository, _alunoDisciplinaTurmaRepository, _frequenciaRepository);
 
             return Json(new { success = true, responseText = retorno.ToString() });
-
 
         }
     }

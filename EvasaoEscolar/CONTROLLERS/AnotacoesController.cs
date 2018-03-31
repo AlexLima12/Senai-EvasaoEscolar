@@ -6,16 +6,18 @@ using EvasaoEscolar.REPOSITORIES;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using EvasaoEscolar.CONTEXTO;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc.Cors.Internal;
 
 namespace EvasaoEscolar.CONTROLLERS {
 	
 	[Route("api/[controller]")]
+    [EnableCors("AllowAnyOrigin")]
 	
 	public class AnotacoesController : Controller{
 			
             AnotacoesDomain anotacoes = new AnotacoesDomain();
 			private IBaseRepository<AnotacoesDomain> _anatacoesRepository;
-
              readonly EvasaEscolarContext contexto;
 			
 			public AnotacoesController(IBaseRepository<AnotacoesDomain> anotacoesRepository,  EvasaEscolarContext contexto){
@@ -23,8 +25,7 @@ namespace EvasaoEscolar.CONTROLLERS {
 
                 this.contexto = contexto;
 			}
-			
-			
+						
 			
 			 public IActionResult Cadastrar([FromBody] AnotacoesDomain anotacoes){
 				 
@@ -42,28 +43,8 @@ namespace EvasaoEscolar.CONTROLLERS {
                 return BadRequest("Erro ao cadastrar os dados... " + ex.Message);
             }
 		 }
-		 
-	  		
-      
-
-        //      [Route("deletar")]
-        // [HttpDelete]
-        // public IActionResult Deletar([FromBody] AnotacoesDomain anotacoes)
-        // {
-        //     if(!ModelState.IsValid)
-        //         return BadRequest(ModelState);
-            
-        //     try
-        //     {
-        //          _anatacoesRepository.Deletar(anotacoes);
-        //          return Ok($"Anotação deletada com sucesso.");
-        //     }
-        //     catch(Exception ex)
-        //     {
-        //         return BadRequest("Erro ao deletar dados. " + ex.Message);
-        //     }
-        // }
-
+		  		
+    
          [Route("deletarid/{Id}")]
         [HttpDelete]
         public IActionResult Delete(int Id)
