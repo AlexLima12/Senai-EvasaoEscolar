@@ -28,18 +28,21 @@ namespace EvasaoEscolar.CONTROLLERS
         private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
         private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
         private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
+        private IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository;
 
         //Valores recortados do contrutor abaixo:
         // , IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
       //  IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository
         public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
-        IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
+        IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository,
+        IBaseRepository<AlunoDisciplinaTurmaDomain> alunoDisciplinaTurmaRepository)
         {
             _hostingEnvironment = hostingEnvironment;
            _alunoRepository = alunoRepository;
            _planilhaDadosRepository = planilhaDadosRepository;
            _disciplinaturmaRepository = disciplinaturmaRepository;
            _uploadplanilhaRepository = uploadplanilhaRepository;
+          _alunoDisciplinaTurmaRepository = alunoDisciplinaTurmaRepository;
         }
 
         [HttpPost("UploadFiles")]
@@ -50,7 +53,7 @@ namespace EvasaoEscolar.CONTROLLERS
             ProcessarPlanilha pp = new ProcessarPlanilha();
 
         string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente, _alunoRepository, _planilhaDadosRepository,
-        _disciplinaturmaRepository, _uploadplanilhaRepository);
+        _disciplinaturmaRepository, _uploadplanilhaRepository, _alunoDisciplinaTurmaRepository);
 
             return Json(new { success = true, responseText = retorno.ToString() });
 
