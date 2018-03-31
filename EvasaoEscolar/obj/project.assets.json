@@ -12745,11 +12745,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\EvasaoEscolar\\EvasaoEscolar.csproj",
+      "projectUniqueName": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\EvasaoEscolar.csproj",
       "projectName": "EvasaoEscolar",
-      "projectPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\EvasaoEscolar\\EvasaoEscolar.csproj",
+      "projectPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\EvasaoEscolar.csproj",
       "packagesPath": "C:\\Users\\ALEX\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\EvasaoEscolar\\obj\\",
+      "outputPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

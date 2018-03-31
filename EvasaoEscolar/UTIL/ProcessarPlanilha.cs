@@ -66,60 +66,51 @@ namespace EvasaoEscolar.UTIL
 
 
             //Valores inseridos para teste, pois esses valores devem ser recebidos do front
-            turmaDoFront = 1;
-            disciplinaDoFront = 3;
+            turmaDoFront = 3;
+            disciplinaDoFront = 1;
             dataCorrespondente = DateTime.Today;
 
             DisciplinaTurmaDomain disciplinaTurmaObj = new DisciplinaTurmaDomain();
             UploadPlanilhaDomain uploadPlanilhaObj = new UploadPlanilhaDomain();
 
+            bool condicao;
+            
             //popular tabela DisciplinaTurma
             disciplinaTurmaObj.DisciplinaId = disciplinaDoFront;
             disciplinaTurmaObj.TurmaId = turmaDoFront;
-            var disciplinasEturmas = _disciplinaturmaRepository.Listar();
-           // .Where(x => x.DisciplinaId == disciplinaDoFront && x.TurmaId == turmaDoFront);
-            
+            var disciplinasEturmas = _disciplinaturmaRepository.Listar().Where(x => x.DisciplinaId == disciplinaDoFront && x.TurmaId == turmaDoFront);
 
-            foreach (var item in disciplinasEturmas)
+            if (disciplinasEturmas.Count() == 0)
             {
-                
-            string condicao;
+                //Quando o objeto a seguir é inserido, eu posso pegar o ID para o último insert
+                _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
 
-                if (item.DisciplinaId == disciplinaDoFront && item.TurmaId == turmaDoFront){
-                
-                    condicao = "true";
-                    }
-                    else {
-                        condicao = "false";
-                    }
-                    
+                //popular tabela UploadPlanilha caso ainda NÃO exista Disciplia e Turma gravadas no banco
+                uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
+                uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
+                uploadPlanilhaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
+                _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
+                condicao = true;
+            }
 
-               switch (condicao)
-               {
-                   case "true":
-                   break;
 
-                   case "false":
-                       _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
-                       break;                   
-               }
+            else
+            {
+                //popular tabela UploadPlanilha caso já exista Disciplia e turma gravadas no banco
+                uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
+                uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
 
-            //     if (condicao != false)
-            //     {
-            //         _disciplinaturmaRepository.Inserir(disciplinaTurmaObj);
-            //     }
-               
-             }
+                foreach (var item in disciplinasEturmas)
+                {
+                    int idObtida;
+                    idObtida = item.Id;
+                    uploadPlanilhaObj.DisciplinaTurmaId = idObtida;
+                    _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
 
-           
+                }
+                condicao = false;
+            }
 
-            //popular tabela UploadPlanilha 
-            uploadPlanilhaObj.DataReferenciaPlanilha = dataCorrespondente;
-            uploadPlanilhaObj.DataUploadPlanilha = DateTime.Now;
-            uploadPlanilhaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
-            //_disciplinaturmaRepository.Listar().Where(c=> c.TurmaId == turmaDoFront && c.DisciplinaId == disciplinaDoFront); 
-
-            _uploadplanilhaRepository.Inserir(uploadPlanilhaObj);
 
             //For para percorrer as linhas da planilha
             for (int i = 2; i < result.Tables[0].Rows.Count; i++)
@@ -150,30 +141,67 @@ namespace EvasaoEscolar.UTIL
                     alunoObj.StatusAlunoEvadiu = true;
                 }
 
+                                            
+                     var alunosCadastrados = _alunoRepository.Listar().Where(x => x.Matricula == alunoObj.Matricula);
+                     if (alunosCadastrados.Count() == 0){
+                    
 
-                //IF para pular vazios
-                if (alunoObj.Matricula != "")
-                {
-                    //inserir aluno vindo da planilha            
-                    _alunoRepository.Inserir(alunoObj);
+                   //for para VERIFICAR SE JÁ EXISTE ALUNO CADASTRADO POR MATRÍCULA
+                    
+                        //IF para pular vazios
+                        if (alunoObj.Matricula != "")
+                        {
+                            //inserir aluno vindo da planilha 
+                                   
+                            _alunoRepository.Inserir(alunoObj);
 
-                    //Pega o Id e nome do aluno para inserir no objeto planilhaDados
-                    planilhaDadosObj.AlunoId = alunoObj.Id;
-                    planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
-                    planilhaDadosObj.UploadPlanilhaId = uploadPlanilhaObj.Id;
+                            //Pega o Id e nome do aluno para inserir no objeto planilhaDados
+                            planilhaDadosObj.AlunoId = alunoObj.Id;
+                            planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
+                            planilhaDadosObj.UploadPlanilhaId = uploadPlanilhaObj.Id;
 
-                    //Insere os dados na tabela PlanilhaDados
-                    _planilhaDadosRepository.Inserir(planilhaDadosObj);
+                            //Insere os dados na tabela PlanilhaDados
+                            _planilhaDadosRepository.Inserir(planilhaDadosObj);
 
-                    //AlunoDisciplinaTurma vai dentro do FOR
-                    alunoDisciplinaTurmaObj.AlunoId = alunoObj.Id;
-                    alunoDisciplinaTurmaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
-                    _alunoDisciplinaTurmaRepository.Inserir(alunoDisciplinaTurmaObj);
-                }
+                            // só inserir o objeto a seguir quando aluno não tiver cadastrado ainda
+                            // inserir alunoDisciplinaTurma no banco
 
-                else
-                {
-                }
+
+                            if (condicao == true)
+                            {
+                                alunoDisciplinaTurmaObj.AlunoId = alunoObj.Id;
+                                alunoDisciplinaTurmaObj.DisciplinaTurmaId = disciplinaTurmaObj.Id;
+                                _alunoDisciplinaTurmaRepository.Inserir(alunoDisciplinaTurmaObj);
+                            }
+                            else
+                            {
+                                foreach (var item1 in disciplinasEturmas)
+                                {
+                                    int idObtida;
+                                    idObtida = item1.Id;
+                                    alunoDisciplinaTurmaObj.AlunoId = alunoObj.Id;
+                                    alunoDisciplinaTurmaObj.DisciplinaTurmaId = idObtida;
+                                    _alunoDisciplinaTurmaRepository.Inserir(alunoDisciplinaTurmaObj);
+
+                                    
+
+                                }
+
+
+
+                            }
+
+
+                        }
+
+                        else
+                        {
+                        }
+                    
+                
+                     }
+
+
             }
 
 
