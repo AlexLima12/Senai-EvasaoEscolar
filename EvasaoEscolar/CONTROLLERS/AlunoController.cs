@@ -6,6 +6,7 @@ using EvasaoEscolar.REPOSITORIES;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
 using EvasaoEscolar.Enum;
+using System.Collections.Generic;
 
 namespace EvasaoEscolar.CONTROLLERS
 {
@@ -53,7 +54,7 @@ namespace EvasaoEscolar.CONTROLLERS
             {
                 var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
                 ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
-                
+
                 var alertasOrdenadas = alunos.OrderBy(x => x.clAlertas.Last().DataAlerta);
 
                 return Ok(alertasOrdenadas);
@@ -64,7 +65,42 @@ namespace EvasaoEscolar.CONTROLLERS
             }
         }
 
+        [HttpGet]
+        [Route("todos/mobile")]
+        public IActionResult BuscarTodosRetornoMobile()
+        {
+            try
+            {
+                IEnumerable<AlunoDomain> alunos = _alunoRepository.Listar(new string[] { "clAnotacoes", "clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas" });
 
+                //var retorno = alunos.Where(e => e.StatusAlunoEvadiu == false && (!(e.clAlertas.Select(h => h.AlertaAntigo == false).Any())));
+
+                var retorno = alunos.Where(e => e.StatusAlunoEvadiu == false && (e.clAlertas.Any(r => r.AlertaAntigo == false)))
+
+                .Select(x => new
+                {
+                    idAluno = x.Id
+                    ,
+                    matricula = x.Matricula
+                    ,
+                    nomeAluno = x.NomeAluno
+                    ,
+                    clAnotacoes = x.clAnotacoes.Select(d => new { idAnotacao = d.Id, mensagemAnotacao = d.Mensagem, idAluno = d.AlunoId }).ToList()
+                    ,
+                    clAlertas = x.clAlertas
+                        .Where(d => d.AlertaAntigo == false)
+                        .Select(c => new { nivelPrioridade = c.NivelPrioridade, mensagemAlerta = c.MensagemAlerta, origemAlerta = c.OrigemAlerta, dataAlerta = c.DataAlerta }).ToList()
+                    ,
+                    turmas = x.clAlunoDisciplinaTurma.Select(a => new { turma = a.DisciplinaTurma.Turma.NomeTurma, statusTurma = a.DisciplinaTurma.Turma.StatusTurma }).ToList()
+                });
+
+                return Ok(retorno);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao buscar dados. " + ex.Message);
+            }
+        }
 
 
         [HttpGet]

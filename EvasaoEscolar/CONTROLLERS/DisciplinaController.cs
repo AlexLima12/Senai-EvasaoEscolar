@@ -24,6 +24,26 @@ namespace EvasaoEscolar.CONTROLLERS
         private IBaseRepository<DisciplinasDomain> _disciplinaRepository;
         readonly EvasaEscolarContext contexto;
 
+        public DisciplinaController(IBaseRepository<DisciplinasDomain> disciplinaRepository)
+        {
+            _disciplinaRepository = disciplinaRepository;
+        }
+
+        // [HttpGet]
+        // [Route("todos")]
+        // public IActionResult Buscar()
+        // {
+        //     try
+        //     {
+        //         var disciplinas = _disciplinaRepository.Listar();
+        //         return Ok(disciplinas);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return BadRequest("Erro ao buscar dados. " + ex.Message);
+        //     }
+        // }
+
         [HttpGet]
         [Route("todos")]
         public IActionResult Buscar()
@@ -31,6 +51,7 @@ namespace EvasaoEscolar.CONTROLLERS
             try
             {
                 var disciplinas = _disciplinaRepository.Listar();
+
                 return Ok(disciplinas);
             }
             catch (Exception ex)
@@ -38,6 +59,9 @@ namespace EvasaoEscolar.CONTROLLERS
                 return BadRequest("Erro ao buscar dados. " + ex.Message);
             }
         }
+
+
+
 
         public IActionResult Cadastrar([FromBody] DisciplinasDomain disciplinas)
         {

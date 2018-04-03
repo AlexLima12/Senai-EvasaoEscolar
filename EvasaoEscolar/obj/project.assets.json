@@ -12745,11 +12745,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\evasaoescolar\\EvasaoEscolar.csproj",
+      "projectUniqueName": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\EvasaoEscolar.csproj",
       "projectName": "EvasaoEscolar",
-      "projectPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\evasaoescolar\\EvasaoEscolar.csproj",
+      "projectPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\EvasaoEscolar.csproj",
       "packagesPath": "C:\\Users\\40344056864\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\evasaoescolar\\obj\\",
+      "outputPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
