@@ -29,6 +29,7 @@ namespace EvasaoEscolar.CONTROLLERS
         private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
         private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
         private IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository;
+        private IBaseRepository<AlertasDomain> _alertasRepository;
 
         private IBaseRepository<FrequenciaDomain> _frequenciaRepository;
 
@@ -37,7 +38,7 @@ namespace EvasaoEscolar.CONTROLLERS
         //  IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository
         public UploadController(IHostingEnvironment hostingEnvironment, IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
         IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository,
-        IBaseRepository<AlunoDisciplinaTurmaDomain> alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> frequenciaRepository)
+        IBaseRepository<AlunoDisciplinaTurmaDomain> alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> frequenciaRepository, IBaseRepository<AlertasDomain> alertasRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _alunoRepository = alunoRepository;
@@ -46,6 +47,7 @@ namespace EvasaoEscolar.CONTROLLERS
             _uploadplanilhaRepository = uploadplanilhaRepository;
             _alunoDisciplinaTurmaRepository = alunoDisciplinaTurmaRepository;
             _frequenciaRepository = frequenciaRepository;
+            _alertasRepository = alertasRepository;
         }
 
         [HttpPost("UploadFiles")]
@@ -55,7 +57,7 @@ namespace EvasaoEscolar.CONTROLLERS
             ProcessarPlanilha pp = new ProcessarPlanilha();
 
             string retorno = pp.ProcessandoPlanilha(files[0], turma, disciplina, dataCorrespondente, _alunoRepository, _planilhaDadosRepository,
-            _disciplinaturmaRepository, _uploadplanilhaRepository, _alunoDisciplinaTurmaRepository, _frequenciaRepository);
+            _disciplinaturmaRepository, _uploadplanilhaRepository, _alunoDisciplinaTurmaRepository, _frequenciaRepository, _alertasRepository);
 
             return Json(new { success = true, responseText = retorno.ToString() });
 

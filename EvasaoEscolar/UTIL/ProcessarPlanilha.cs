@@ -36,7 +36,7 @@ namespace EvasaoEscolar.UTIL
         public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente,
          IBaseRepository<AlunoDomain> _alunoRepository, IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository,
           IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository,
-          IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> _frequenciaRepository)
+          IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> _frequenciaRepository, IBaseRepository<AlertasDomain> alertasRepository)
         {
 
             var data = new MemoryStream();
@@ -144,13 +144,13 @@ namespace EvasaoEscolar.UTIL
 
                 //Consulta para VERIFICAR SE JÁ EXISTE ALUNO CADASTRADO POR MATRÍCULA                        
                 var alunosCadastrados = _alunoRepository.Listar().Where(x => x.Matricula == alunoObj.Matricula);
-                
+
                 int alunodisciplinaturmaIDConsulta = 0;
                 int alunoIDConsulta = 0;
 
                 foreach (var item in alunosCadastrados)
                 {
-                 alunoIDConsulta =  item.Id;
+                    alunoIDConsulta = item.Id;
                 }
 
                 var alunoDisciplinaTurmaCadastrados = _alunoDisciplinaTurmaRepository.Listar().Where(x => x.AlunoId == alunoIDConsulta);
@@ -200,7 +200,7 @@ namespace EvasaoEscolar.UTIL
 
                         }
                         //Popular tabela frequência:                       
-                                                
+
                         //Foreach para criar array com dados de falta e frequêmcia de cada aluno
                         int faltas = 0;
                         var faltasPorAluno = _planilhaDadosRepository.Listar().Where(x => x.AlunoId == alunoObj.Id);
@@ -216,72 +216,105 @@ namespace EvasaoEscolar.UTIL
                         frequenciaObj.Dias = 0;
                         frequenciaObj.Atraso = 0;
                         frequenciaObj.Presenca = 5 - faltas;
-                        frequenciaObj.NumeroDeAulas = faltas + frequenciaObj.Presenca;
+                        frequenciaObj.NumeroDeAulas = 5;
 
                         // // if para verificar se aluno já esta cadastrado na TABELA FREQUENCIA
                         // var consultaFrequencia = _frequenciaRepository.Listar().Where(x => x.AlunoDisciplinaTurmaId == alunoDisciplinaTurmaObj.Id);
                         // if (alunosCadastrados.Count() == 0)
                         // {
                         //     //insert tbl_frequencia
-                             _frequenciaRepository.Inserir(frequenciaObj);
+                        _frequenciaRepository.Inserir(frequenciaObj);
                         // }
 
-                    //     else
-                    //     {
-                    //         //update tbl_frequencia
-                         
-                    //     }
-                     }
+                        //     else
+                        //     {
+                        //         //update tbl_frequencia
+
+                        //     }
+                    }
 
                     else
                     {
                     }
 
 
-                } //Else quando o aluno já está cadastrado
+                }
+                else
+                {
 
-                //Popular tabela planilha dados
-                 planilhaDadosObj.AlunoId = alunoIDConsulta;
-                 planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
-                 planilhaDadosObj.UploadPlanilhaId = uploadPlanilhaObj.Id;
-                 _planilhaDadosRepository.Inserir(planilhaDadosObj);
+                    //Else quando o aluno já está cadastrado
 
-                
-          
-                
-                
-                  //Popular tabela frequência:                       
-                                                
-                        //Foreach para criar array com dados de falta e frequêmcia de cada aluno
-                        int faltass = 0;
-                        var faltasPorAlunoss = _planilhaDadosRepository.Listar().Where(x => x.Id == planilhaDadosObj.Id);
+                    //Popular tabela planilha dados
+                    planilhaDadosObj.AlunoId = alunoIDConsulta;
+                    planilhaDadosObj.NomeAluno = alunoObj.NomeAluno;
+                    planilhaDadosObj.UploadPlanilhaId = uploadPlanilhaObj.Id;
+                    _planilhaDadosRepository.Inserir(planilhaDadosObj);
 
-                        foreach (var item in faltasPorAlunoss)
-                        {
-                            string[] faltasArray = new string[5] { item.Aula1Planilha, item.Aula2Planilha, item.Aula3Planilha, item.Aula4Planilha, item.Aula5Planilha };
-                            faltass = faltasArray.Where(e => e.ToLower() == "f").Count();
+
+                    //Popular tabela frequência:                       
+
+                    #region Foreach criar array
+                    //Foreach para criar array com dados de falta e frequêmcia de cada aluno
+                    int faltass = 0;
+                    var faltasPorAlunoss = _planilhaDadosRepository.Listar().Where(x => x.Id == planilhaDadosObj.Id);
+
+                    foreach (var item in faltasPorAlunoss)
+                    {
+                        string[] faltasArray = new string[5] { item.Aula1Planilha, item.Aula2Planilha, item.Aula3Planilha, item.Aula4Planilha, item.Aula5Planilha };
+                        faltass = faltasArray.Where(e => e.ToLower() == "f").Count();
+                    }
+
+                    // frequenciaObj.AlunoDisciplinaTurmaId = alunodisciplinaturmaIDConsulta;
+                    // frequenciaObj.Falta = faltass;
+                    // frequenciaObj.Dias = 0;
+                    // frequenciaObj.Atraso = 0;
+                    frequenciaObj.Presenca = 5 - faltass;
+                    // frequenciaObj.NumeroDeAulas = faltass + frequenciaObj.Presenca;
+
+                    #endregion
+
+
+                   //consulta se já existem frequencia cadastradas para o alunodisciplinaturmaId
+                    var frequenciasCadastradas = _frequenciaRepository.Listar().Where(x => x.AlunoDisciplinaTurmaId == alunodisciplinaturmaIDConsulta).FirstOrDefault();
+
+                    frequenciasCadastradas.Falta = frequenciasCadastradas.Falta + faltass;
+                    frequenciasCadastradas.NumeroDeAulas = frequenciasCadastradas.NumeroDeAulas + 5;
+                    frequenciasCadastradas.Presenca = frequenciasCadastradas.Presenca + frequenciaObj.Presenca;
+                    _frequenciaRepository.Atualizar(frequenciasCadastradas);
+
+                    //popular tabela alertas
+                    AlertasDomain alertasObj = new AlertasDomain();
+
+                    int qualquer = uploadPlanilhaObj.Id;
+
+                    //selecionar ultimo upload
+                    var ultima = _uploadplanilhaRepository.Listar().Where(a => a.DisciplinaTurmaId == alunodisciplinaturmaIDConsulta).OrderBy(a => a.DataReferenciaPlanilha).Last();
+
+                    var faltaAnterior = _planilhaDadosRepository.Listar().Where(x => x.AlunoId == alunoIDConsulta && x.UploadPlanilhaId == ultima.Id);
+                    
+
+                    //CONTINUAR DAQUI
+                    bool houveFalta = false;
+                    foreach (var item in faltaAnterior)
+                    {
+                        if(item.Aula1Planilha == "f"|| item.Aula2Planilha == "f"){
+                            houveFalta = true;
                         }
+                    }
 
-                        frequenciaObj.AlunoDisciplinaTurmaId = alunodisciplinaturmaIDConsulta;
-                        frequenciaObj.Falta = faltass;
-                        frequenciaObj.Dias = 0;
-                        frequenciaObj.Atraso = 0;
-                        frequenciaObj.Presenca = 5 - faltass;
-                        frequenciaObj.NumeroDeAulas = faltass + frequenciaObj.Presenca;
+                    alertasObj.AlertaAntigo = false;
+                    alertasObj.AlunoId = alunoIDConsulta;
+                    alertasObj.DataAlerta = DateTime.Today;
+                    alertasObj.MensagemAlerta = "Alerta teste";
+                    alertasObj.NivelPrioridade = 1;
+                    alertasObj.OrigemAlerta = 1;
 
+                    DateTime dia;
+                    dia = DateTime.Today;
+                    dia = dia.AddDays(-1);
+                    
 
-                int idRecuperada = 0;
-                var frequenciasCadastradas = _frequenciaRepository.Listar().Where(x => x.AlunoDisciplinaTurmaId == alunodisciplinaturmaIDConsulta).FirstOrDefault();
-                idRecuperada = frequenciasCadastradas.Id;
-                
-                // foreach (var item in frequenciasCadastradas)
-                // {
-                //      idRecuperada =  item.Id;
-                // }
-
-                frequenciaObj.Id = idRecuperada;
-                 _frequenciaRepository.Atualizar(frequenciaObj);
-
+                }
             }
 
             string retorno = "Upload Concluido";
