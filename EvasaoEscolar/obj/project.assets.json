@@ -12739,28 +12739,30 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\40344056864\\.nuget\\packages\\": {},
+    "C:\\Users\\ALEX\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\EvasaoEscolar.csproj",
+      "projectUniqueName": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\EvasaoEscolar.csproj",
       "projectName": "EvasaoEscolar",
-      "projectPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\EvasaoEscolar.csproj",
-      "packagesPath": "C:\\Users\\40344056864\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\40344056864\\Desktop\\EvasaoEscolar\\Senai-EvasaoEscolar\\EvasaoEscolar\\obj\\",
+      "projectPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\EvasaoEscolar.csproj",
+      "packagesPath": "C:\\Users\\ALEX\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ALEX\\Desktop\\Projetos\\Senai-evasao\\evasaoescolar\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\40344056864\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\ALEX\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp2.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -12777,58 +12779,58 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
-          "Microsoft.NETCore.App": {
-            "target": "Package",
-            "version": "2.0.3",
-            "autoReferenced": true
-          },
           "DotNetCore.NPOI": {
             "target": "Package",
-            "version": "1.0.2"
+            "version": "[1.0.2, )"
           },
           "ExcelDataReader": {
             "target": "Package",
-            "version": "2.1.2.3"
+            "version": "[2.1.2.3, )"
           },
           "Microsoft.AspNet.WebApi.Cors": {
             "target": "Package",
-            "version": "5.2.5-preview1"
+            "version": "[5.2.5-preview1, )"
           },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
-            "version": "2.0.0"
+            "version": "[2.0.0, )"
           },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
           },
           "Microsoft.EntityFrameworkCore.Design": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
           },
           "Microsoft.EntityFrameworkCore.Relational": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
           },
           "Microsoft.EntityFrameworkCore.SqlServer": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
           },
           "Microsoft.EntityFrameworkCore.Tools.DotNet": {
             "target": "Package",
-            "version": "2.0.1"
+            "version": "[2.0.1, )"
+          },
+          "Microsoft.NETCore.App": {
+            "target": "Package",
+            "version": "[2.0.3, )",
+            "autoReferenced": true
           },
           "Newtonsoft.Json": {
             "target": "Package",
-            "version": "11.0.1"
+            "version": "[11.0.1, )"
           },
           "Swashbuckle.AspNetCore.Swagger": {
             "target": "Package",
-            "version": "2.3.0"
+            "version": "[2.3.0, )"
           },
           "System.ComponentModel.Annotations": {
             "target": "Package",
-            "version": "4.5.0-preview1-26216-02"
+            "version": "[4.5.0-preview1-26216-02, )"
           }
         },
         "imports": [

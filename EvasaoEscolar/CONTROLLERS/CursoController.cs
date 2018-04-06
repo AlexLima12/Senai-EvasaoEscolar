@@ -5,6 +5,8 @@ using EvasaoEscolar.MODELS;
 using EvasaoEscolar.REPOSITORIES;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc.Cors.Internal;
+using EvasaoEscolar.CONTEXTO;
+using System.Linq;
 
 namespace EvasaoEscolar.CONTROLLERS
 {
@@ -13,22 +15,24 @@ namespace EvasaoEscolar.CONTROLLERS
     [EnableCors("AllowAnyOrigin")]
     public class CursoController : Controller
     {
-          private IBaseRepository<CursoDomain> _cursoRepository;
+        private IBaseRepository<CursoDomain> _cursoRepository;
 
-          public CursoController(IBaseRepository<CursoDomain> cursoRepository)
-          {
-              _cursoRepository = cursoRepository;
-          }
-        
-        
+        readonly EvasaEscolarContext contexto;
+
+        public CursoController(IBaseRepository<CursoDomain> cursoRepository)
+        {
+            _cursoRepository = cursoRepository;
+        }
+
+
         [HttpGet]
-        [Route("todos")]      
+        [Route("todos")]
         public IActionResult Buscar()
         {
             try
             {
                 var cursos = _cursoRepository.Listar();
-                return Ok(cursos); 
+                return Ok(cursos);
             }
             catch (Exception ex)
             {
@@ -54,26 +58,46 @@ namespace EvasaoEscolar.CONTROLLERS
             }
         }
 
+        [Route("deletarid/{Id}")]
+        [HttpDelete]
+        public IActionResult Delete(int Id)
+        {
+            var cursos = contexto.DbCursos.Where(i => i.Id == Id).FirstOrDefault();
+            if (cursos == null)
+                return NotFound();
 
-            
-         public IActionResult Cadastrar([FromBody] CursoDomain curso)
-         {
-             if(!ModelState.IsValid)
+            contexto.DbCursos.Remove(cursos);
+            int x = contexto.SaveChanges();
+            if (x > 0)
+            {
+                return Ok($"Deletado");
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+        }
+
+
+        public IActionResult Cadastrar([FromBody] CursoDomain curso)
+        {
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            try 
+
+            try
             {
                 _cursoRepository.Inserir(curso);
                 return Ok($"Curso: {curso.NomeCurso} cadastrado com sucesso!");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest("Erro ao cadastrar dados. " + ex.Message);
             }
-         }
+        }
 
 
 
-         
+
     }
 }

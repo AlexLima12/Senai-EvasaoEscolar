@@ -274,7 +274,7 @@ namespace EvasaoEscolar.UTIL
                     #endregion
 
 
-                   //consulta se já existem frequencia cadastradas para o alunodisciplinaturmaId
+                    //consulta se já existem frequencia cadastradas para o alunodisciplinaturmaId
                     var frequenciasCadastradas = _frequenciaRepository.Listar().Where(x => x.AlunoDisciplinaTurmaId == alunodisciplinaturmaIDConsulta).FirstOrDefault();
 
                     frequenciasCadastradas.Falta = frequenciasCadastradas.Falta + faltass;
@@ -282,37 +282,37 @@ namespace EvasaoEscolar.UTIL
                     frequenciasCadastradas.Presenca = frequenciasCadastradas.Presenca + frequenciaObj.Presenca;
                     _frequenciaRepository.Atualizar(frequenciasCadastradas);
 
-                    //popular tabela alertas
-                    AlertasDomain alertasObj = new AlertasDomain();
+                    // //popular tabela alertas
+                    // AlertasDomain alertasObj = new AlertasDomain();
 
-                    int qualquer = uploadPlanilhaObj.Id;
+                    // int qualquer = uploadPlanilhaObj.Id;
 
-                    //selecionar ultimo upload
-                    var ultima = _uploadplanilhaRepository.Listar().Where(a => a.DisciplinaTurmaId == alunodisciplinaturmaIDConsulta).OrderBy(a => a.DataReferenciaPlanilha).Last();
+                    // //selecionar ultimo upload
+                    // var ultima = _uploadplanilhaRepository.Listar().Where(a => a.DisciplinaTurmaId == alunodisciplinaturmaIDConsulta).OrderBy(a => a.DataReferenciaPlanilha).Last();
 
-                    var faltaAnterior = _planilhaDadosRepository.Listar().Where(x => x.AlunoId == alunoIDConsulta && x.UploadPlanilhaId == ultima.Id);
-                    
+                    // var faltaAnterior = _planilhaDadosRepository.Listar().Where(x => x.AlunoId == alunoIDConsulta && x.UploadPlanilhaId == ultima.Id);
 
-                    //CONTINUAR DAQUI
-                    bool houveFalta = false;
-                    foreach (var item in faltaAnterior)
-                    {
-                        if(item.Aula1Planilha == "f"|| item.Aula2Planilha == "f"){
-                            houveFalta = true;
-                        }
-                    }
 
-                    alertasObj.AlertaAntigo = false;
-                    alertasObj.AlunoId = alunoIDConsulta;
-                    alertasObj.DataAlerta = DateTime.Today;
-                    alertasObj.MensagemAlerta = "Alerta teste";
-                    alertasObj.NivelPrioridade = 1;
-                    alertasObj.OrigemAlerta = 1;
+                    // //CONTINUAR DAQUI
+                    // bool houveFalta = false;
+                    // foreach (var item in faltaAnterior)
+                    // {
+                    //     if(item.Aula1Planilha == "f"|| item.Aula2Planilha == "f"){
+                    //         houveFalta = true;
+                    //     }
+                    // }
 
-                    DateTime dia;
-                    dia = DateTime.Today;
-                    dia = dia.AddDays(-1);
-                    
+                    // alertasObj.AlertaAntigo = false;
+                    // alertasObj.AlunoId = alunoIDConsulta;
+                    // alertasObj.DataAlerta = DateTime.Today;
+                    // alertasObj.MensagemAlerta = "Alerta teste";
+                    // alertasObj.NivelPrioridade = 1;
+                    // alertasObj.OrigemAlerta = 1;
+
+                    // DateTime dia;
+                    // dia = DateTime.Today;
+                    // dia = dia.AddDays(-1);
+
 
                 }
             }
