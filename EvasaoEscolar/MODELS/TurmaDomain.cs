@@ -11,10 +11,9 @@ namespace EvasaoEscolar.MODELS
         [StringLength(100)]
         public string NomeTurma { get; set; }
 
-        [Required]
-        [StringLength(1)]
+        [Required]      
         public int Periodo { get; set; }
-        //periodo 0 = Manha, 1 = Tarde, 2 = Noite
+      
         
 
         [ForeignKey("EscolaId")]

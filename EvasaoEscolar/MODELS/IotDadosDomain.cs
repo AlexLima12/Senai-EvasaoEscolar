@@ -25,7 +25,7 @@ namespace EvasaoEscolar.MODELS
 
         public decimal HeadPose { get; set; }
         public decimal EsposureValue { get; set; }
-        public decimal EsposureLevel { get; set; }
+      //  public decimal EsposureLevel { get; set; }
         public decimal Smile { get; set; }
         public decimal Contempt { get; set; }
         public decimal Surprise { get; set; }
@@ -50,9 +50,8 @@ namespace EvasaoEscolar.MODELS
         [StringLength(100)]
         public string FaceId { get; set; }
 
-
-
-
+        [StringLength(100)]
+        public string EsposureLevel { get; set; }
 
     }
 }

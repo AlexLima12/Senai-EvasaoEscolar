@@ -34,10 +34,6 @@ namespace EvasaoEscolar.MODELS
       
         [StringLength(1)]
         public int OrigemAlerta { get; set; }
-
-
-
-
        // public ICollection<AlertaItemDomain> clAlertaItem { get; set; }
     }
 }

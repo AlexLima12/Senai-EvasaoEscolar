@@ -23,9 +23,10 @@ namespace EvasaoEscolar.CONTROLLERS
     {
         private IBaseRepository<TurmaDomain> _turmaRepository;
         readonly EvasaEscolarContext contexto;
-        public TurmaController(IBaseRepository<TurmaDomain> turmaRepository)
+        public TurmaController(IBaseRepository<TurmaDomain> turmaRepository, EvasaEscolarContext contexto)
         {
             _turmaRepository = turmaRepository;
+            this.contexto = contexto;
         }
 
         [HttpGet]
@@ -46,15 +47,12 @@ namespace EvasaoEscolar.CONTROLLERS
 
         public IActionResult Cadastrar([FromBody] TurmaDomain turmas)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-
             try
             {
                 _turmaRepository.Inserir(turmas);
                 return Ok($"id:{turmas.Id}");
-
             }
             catch (Exception ex)
             {
@@ -62,6 +60,27 @@ namespace EvasaoEscolar.CONTROLLERS
             }
         }
 
+
+        [HttpPut("atualizarPorId/{id}/{status}")]
+        [Route("atualizarPorId")]
+        public IActionResult AtualizarId(int id, bool status)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                var turma = _turmaRepository.BuscarPorId(id);
+                turma.StatusTurma = status;
+                _turmaRepository.Atualizar(turma);
+                return Ok($"Turma atualizada");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Erro ao atualizar os dados... " + ex.Message);
+            }
+        }
 
         [Route("deletarid/{Id}")]
         [HttpDelete]

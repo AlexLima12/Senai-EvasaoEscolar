@@ -19,9 +19,10 @@ namespace EvasaoEscolar.CONTROLLERS
 
         readonly EvasaEscolarContext contexto;
 
-        public CursoController(IBaseRepository<CursoDomain> cursoRepository)
+        public CursoController(IBaseRepository<CursoDomain> cursoRepository, EvasaEscolarContext contexto)
         {
             _cursoRepository = cursoRepository;
+            this.contexto = contexto;
         }
 
 

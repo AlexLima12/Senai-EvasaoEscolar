@@ -36,6 +36,9 @@ namespace EvasaoEscolar.CONTROLLERS
                 var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
                 ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
 
+          //     alunos.OrderByDescending( c => c.clAlertas.OrderBy(e => e.NivelPrioridade));
+
+
                 return Ok(alunos);
             }
             catch (Exception ex)
@@ -45,25 +48,6 @@ namespace EvasaoEscolar.CONTROLLERS
         }
 
 
-
-        [HttpGet]
-        [Route("todosOrdenado")]
-        public IActionResult BuscarOrdenado()
-        {
-            try
-            {
-                var alunos = _alunoRepository.Listar(new string[]{"clAnotacoes", "clAlunoDisciplinaTurma", "clAlunoDisciplinaTurma.DisciplinaTurma"
-                ,"clAlunoDisciplinaTurma.DisciplinaTurma.Turma", "clAlertas"});
-
-                var alertasOrdenadas = alunos.OrderBy(x => x.clAlertas.Last().DataAlerta);
-
-                return Ok(alertasOrdenadas);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Erro ao buscar dados. " + ex.Message);
-            }
-        }
 
         [HttpGet]
         [Route("todos/mobile")]

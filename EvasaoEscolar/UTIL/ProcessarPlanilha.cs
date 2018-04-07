@@ -14,31 +14,19 @@ namespace EvasaoEscolar.UTIL
 {
     public class ProcessarPlanilha
     {
-        // private IBaseRepository<AlunoDomain> _alunoRepository;
-        // private IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository;
-        // private IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository;
-        // private IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository;
-
+        
         public ProcessarPlanilha()
         {
 
         }
-
-        // public ProcessarPlanilha(IBaseRepository<AlunoDomain> alunoRepository, IBaseRepository<PlanilhaDadosDomain> planilhaDadosRepository,
-        // IBaseRepository<DisciplinaTurmaDomain> disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> uploadplanilhaRepository)
-        // {
-        //     _alunoRepository = alunoRepository;
-        //     _planilhaDadosRepository = planilhaDadosRepository;
-        //     _disciplinaturmaRepository = disciplinaturmaRepository;
-        //     _uploadplanilhaRepository = uploadplanilhaRepository;
-        // }
+       
 
         public string ProcessandoPlanilha(IFormFile arquivo, int turmaDoFront, int disciplinaDoFront, DateTime dataCorrespondente,
          IBaseRepository<AlunoDomain> _alunoRepository, IBaseRepository<PlanilhaDadosDomain> _planilhaDadosRepository,
           IBaseRepository<DisciplinaTurmaDomain> _disciplinaturmaRepository, IBaseRepository<UploadPlanilhaDomain> _uploadplanilhaRepository,
           IBaseRepository<AlunoDisciplinaTurmaDomain> _alunoDisciplinaTurmaRepository, IBaseRepository<FrequenciaDomain> _frequenciaRepository, IBaseRepository<AlertasDomain> alertasRepository)
         {
-
+            //Receber arquivodo excel via Controller UPLOAD
             var data = new MemoryStream();
             arquivo.CopyTo(data);
 

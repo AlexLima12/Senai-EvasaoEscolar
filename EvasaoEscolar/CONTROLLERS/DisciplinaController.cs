@@ -15,34 +15,20 @@ using EvasaoEscolar.CONTEXTO;
 
 namespace EvasaoEscolar.CONTROLLERS
 {
-    
+
     [Route("api/[controller]")]
     [EnableCors("AllowAnyOrigin")]
-    
-        public class DisciplinaController : Controller
+
+    public class DisciplinaController : Controller
     {
         private IBaseRepository<DisciplinasDomain> _disciplinaRepository;
         readonly EvasaEscolarContext contexto;
 
-        public DisciplinaController(IBaseRepository<DisciplinasDomain> disciplinaRepository)
+        public DisciplinaController(IBaseRepository<DisciplinasDomain> disciplinaRepository, EvasaEscolarContext contexto)
         {
             _disciplinaRepository = disciplinaRepository;
+            this.contexto = contexto;
         }
-
-        // [HttpGet]
-        // [Route("todos")]
-        // public IActionResult Buscar()
-        // {
-        //     try
-        //     {
-        //         var disciplinas = _disciplinaRepository.Listar();
-        //         return Ok(disciplinas);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         return BadRequest("Erro ao buscar dados. " + ex.Message);
-        //     }
-        // }
 
         [HttpGet]
         [Route("todos")]
@@ -60,12 +46,8 @@ namespace EvasaoEscolar.CONTROLLERS
             }
         }
 
-
-
-
         public IActionResult Cadastrar([FromBody] DisciplinasDomain disciplinas)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -82,7 +64,7 @@ namespace EvasaoEscolar.CONTROLLERS
         }
 
 
-         [Route("deletarid/{Id}")]
+        [Route("deletarid/{Id}")]
         [HttpDelete]
         public IActionResult Delete(int Id)
         {
